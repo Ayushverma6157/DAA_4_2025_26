@@ -1,0 +1,161 @@
+LeetCode Logo
+Problem List
+Debugging...
+Debugging...
+
+
+
+
+
+
+
+
+
+0
+0Streaks
+Extend Your Streak!
+DCC Badge
+
+avatar
+Avatar
+ayushverma05092005
+Access all features with our Premium subscription!
+myLists
+My Lists
+notebook
+Notebook
+progress
+Progress
+points
+Points
+Try New Features
+Orders
+My Playgrounds
+Settings
+Appearance
+Sign Out
+Premium
+Description
+Description
+Accepted
+Editorial
+Editorial
+Solutions
+Solutions
+Submissions
+Submissions
+
+
+Code
+Testcase
+Testcase
+Test Result
+C++
+Auto
+
+
+
+
+
+1715181920162122231412131191085674231
+        int len=ans.size();
+        vecot<int>reorder;
+        int low=0;
+        int high=len-1;
+        whle(low<high)
+        {
+            reorder.push_back(ans[low]);
+            low++;
+            reorder.push_back(ans[high]);
+            high--;
+
+Saved
+Accepted
+Runtime: 0 ms
+Case 1
+Case 2
+Input
+head =
+[1,2,3,4]
+Output
+[1,4,2,3]
+Expected
+[1,4,2,3]
+Contribute a testcase
+All Submissions
+
+Accepted
+12 / 12 testcases passed
+ayushverma05092005
+ayushverma05092005
+submitted at Mar 09, 2026 10:12
+
+Analysis
+
+Solution
+Runtime
+0
+ms
+Beats
+100.00%
+Memory
+22.94
+MB
+Beats
+30.08%
+Code
+C++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    void reorderList(ListNode* head) {
+        if(!head || !head->next) return;
+        ListNode* slow=head;
+        ListNode *fast=head;
+        while(fast!=NULL && fast->next!=NULL)
+        {
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+        ListNode *second=slow->next;
+        slow->next=NULL;
+        ListNode* current=second;
+        ListNode* prev=NULL;
+        while(current!=NULL)
+        {
+            ListNode* next=current->next;
+            current->next=prev;
+            prev=current;
+            current=next;
+        }
+        ListNode *first=head;
+        second=prev;
+        while(second)
+        {
+            ListNode* temp1=first->next;
+            ListNode* temp2=second->next;
+            first->next=second;
+            second->next=temp1;
+            first=temp1;
+            second=temp2;
+        }
+        
+    }
+};
+View less
+ 
+Write your notes here
+Select related tags
+0/5
+Search questions
+
+
