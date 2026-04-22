@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Traffic Analysis System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+
+        <aside class="sidebar glass-panel">
+            <h1 class="brand-title">Traffic<span>AI</span></h1>
+            
+            <div class="control-section">
+                <h2>1. Edit Graph</h2>
+                <div class="form-group">
+                    <button id="add-node-btn" class="btn primary-btn">Add Node</button>
+                </div>
+                <form id="add-edge-form" class="control-form">
+                    <div class="input-row">
+                        <input type="number" id="edge-u" placeholder="Node U" required min="0">
+                        <input type="number" id="edge-v" placeholder="Node V" required min="0">
+                        <input type="number" id="edge-w" placeholder="Weight" required min="1">
+                    </div>
+                    <button type="submit" class="btn secondary-btn">Add Edge</button>
+                </form>
+                <form id="block-road-form" class="control-form">
+                    <div class="input-row">
+                        <input type="number" id="block-u" placeholder="Node U" required min="0">
+                        <input type="number" id="block-v" placeholder="Node V" required min="0">
+                    </div>
+                    <button type="submit" class="btn danger-btn">Block Road</button>
+                </form>
+            </div>
+
+            <div class="control-section">
+                <h2>2. Find Route</h2>
+                <form id="find-route-form" class="control-form">
+                    <div class="input-row">
+                        <input type="number" id="route-src" placeholder="Source" required min="0">
+                        <input type="number" id="route-dest" placeholder="Destination" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Traffic Level:</label>
+                        <select id="traffic-level">
+                            <option value="0">Low</option>
+                            <option value="1">Medium (+2 time)</option>
+                            <option value="2">High (+5 time)</option>
+                        </select>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="is-emergency">
+                        <label for="is-emergency">Emergency Vehicle (Cost Halved)</label>
+                    </div>
+                    <button type="submit" class="btn primary-btn pulse">Find Shortest Path</button>
+                </form>
+            </div>
+
+            <div class="control-section results-section">
+                <h2>Results</h2>
+                <div id="results-display" class="results-display empty">
+                    Run a query to see results.
+                </div>
+            </div>
+        </aside>
+
+
+        <main class="main-content">
+            <header class="topbar">
+                <p>Drag nodes to rearrange. Pink nodes are emergency-capable paths.</p>
+                <button id="reset-graph-btn" class="btn ghost-btn">Reset Graph</button>
+            </header>
+            <div id="graph-container" class="graph-container">
+                <svg id="edges-svg"></svg>
+                <div id="nodes-container"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

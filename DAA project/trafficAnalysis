@@ -1,0 +1,223 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+using namespace std;
+
+class Graph
+{
+    int V;
+    vector<vector<pair<int, int>>> adj;
+
+public:
+    Graph(int v)
+    {
+        V = v;
+        adj.resize(V);
+    }
+
+    void addEdge(int u, int v, int w)
+    {
+        adj[u].push_back({v, w});
+        adj[v].push_back({u, w});
+    }
+
+    void addNode()
+    {
+        V++;
+        adj.push_back({});
+        cout << "Node " << V - 1 << " added successfully." << endl;
+    }
+
+    int getV() const {
+        return V;
+    }
+
+    void display()
+    {
+        cout <<endl<< "Graph (Node -> (Neighbor, Weight)):" << endl;
+        for (int i = 0; i < V; i++)
+        {
+            cout << i << " -> ";
+            for (auto x : adj[i])
+            {
+                cout << "(" << x.first << "," << x.second << ") ";
+            }
+            cout << endl;
+        }
+    }
+
+    void shortestPath(int src, int dest, bool emergency, int trafficLevel)
+    {
+        vector<int> dist(V, INT_MAX);
+        vector<int> parent(V, -1);
+
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+
+        dist[src] = 0;
+        pq.push({0, src});
+
+        while (!pq.empty())
+        {
+            int node = pq.top().second;
+            pq.pop();
+
+            for (auto neighbor : adj[node])
+            {
+                int v = neighbor.first;
+                int weight = neighbor.second;
+
+                if (trafficLevel == 1)
+                    weight += 2;
+                else if (trafficLevel == 2)
+                    weight += 5;
+                if (emergency)
+                    weight = weight / 2;
+                if (dist[v] > dist[node] + weight)
+                {
+                    dist[v] = dist[node] + weight;
+                    parent[v] = node;
+                    pq.push({dist[v], v});
+                }
+            }
+        }
+        cout << endl;
+        cout << "<===== RESULT =====>;" << endl;
+        if (dist[dest] == INT_MAX)
+        {
+            cout << "No path available!\n";
+            return;
+        }
+        cout << "Minimum Time: " << dist[dest] << endl;
+        cout << "Path: ";
+        vector<int> path;
+        for (int v = dest; v != -1; v = parent[v])
+            path.push_back(v);
+
+        for (int i = path.size() - 1; i >= 0; i--)
+        {
+            cout << path[i];
+            if (i != 0)
+                cout << " -> ";
+        }
+        cout << endl;
+    }
+    void blockRoad(int u, int v)
+    {
+        for (auto &x : adj[u])
+        {
+            if (x.first == v)
+                x.second = INT_MAX;
+        }
+        for (auto &x : adj[v])
+        {
+            if (x.first == u)
+                x.second = INT_MAX;
+        }
+        cout << "Road blocked between " << u << " and " << v << endl;
+    }
+};
+int main()
+{
+    Graph g(6);
+    g.addEdge(0, 1, 4);
+    g.addEdge(0, 2, 2);
+    g.addEdge(1, 2, 1);
+    g.addEdge(1, 3, 5);
+    g.addEdge(2, 3, 8);
+    g.addEdge(2, 4, 10);
+    g.addEdge(3, 4, 2);
+    g.addEdge(3, 5, 6);
+    g.addEdge(4, 5, 3);
+    int choice;
+    do
+    {
+        cout << endl;
+        cout << "<===== SMART TRAFFIC SYSTEM =====>" << endl;
+        cout << "1. Display Graph" << endl;
+        cout << "2. Normal Vehicle Route" << endl;
+        cout << "3. Emergency Vehicle Route" << endl;
+        cout << "4. Block Road" << endl;
+        cout << "5. Show Complexity" << endl;
+        cout << "6. Add Node" << endl;
+        cout << "7. Add Edge" << endl;
+        cout << "0. Exit" << endl;
+        cout << "Enter choice: ";
+        cin >> choice;
+        switch (choice)
+        {
+
+        case 1:
+            g.display();
+            break;
+
+        case 2:
+        {
+            int src, dest, traffic;
+            cout << "Enter source & destination: ";
+            cin >> src >> dest;
+
+            cout << "Traffic Level (0=Low,1=Medium,2=High): ";
+            cin >> traffic;
+
+            g.shortestPath(src, dest, false, traffic);
+            break;
+        }
+
+        case 3:
+        {
+            int src, dest, traffic;
+            cout << "Enter source & destination: ";
+            cin >> src >> dest;
+
+            cout << "Traffic Level (0=Low,1=Medium,2=High): ";
+            cin >> traffic;
+
+            g.shortestPath(src, dest, true, traffic);
+            break;
+        }
+
+        case 4:
+        {
+            int u, v;
+            cout << "Enter road to block (u v): ";
+            cin >> u >> v;
+            g.blockRoad(u, v);
+            break;
+        }
+
+        case 5:
+            cout << "\nTime Complexity: O(E log V)";
+            cout << "\nSpace Complexity: O(V + E)\n";
+            break;
+
+        case 6:
+            g.addNode();
+            break;
+
+        case 7:
+        {
+            int u, v, w;
+            cout << "Enter source, destination, and weight (u v w): ";
+            cin >> u >> v >> w;
+            if (u >= 0 && u < g.getV() && v >= 0 && v < g.getV()) {
+                g.addEdge(u, v, w);
+                cout << "Edge added successfully." << endl;
+            } else {
+                cout << "Invalid nodes! Ensure nodes exist." << endl;
+            }
+            break;
+        }
+
+        case 0:
+            cout << "Exiting...\n";
+            break;
+
+        default:
+            cout << "Invalid choice!\n";
+        }
+
+    } while (choice != 0);
+
+    return 0;
+}
